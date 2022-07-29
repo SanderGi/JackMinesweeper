@@ -1,0 +1,201 @@
+class Main {
+    static boolean gameStillGoing;
+    static boolean win;
+    static Grid grid;
+    static int rows;
+    static int cols;
+    static int curX;
+    static int curY;
+    static int totalMines;
+    static int timer;
+    static int subtimer;
+
+    function void main() {
+        var int a,b,c;
+        var int input;
+        var int counter; // used for generating random seeds based on user input
+        var Cell element; // temporary, used to operate in cells in grid;
+
+        let gameStillGoing = true;
+        let win = false;
+        let curX = 16;
+        let curY = 8;
+        let rows = 15;
+        let cols = 32;
+
+        do Output.printString("15x32 (480 tiles)");
+        do Output.moveCursor(0, 25);
+        do Output.printString("MINESWEEPER!");
+
+        do Output.moveCursor(5, 6);
+        let totalMines = Keyboard.readInt("Please enter how many mines you would like in total: ");
+        let totalMines = Main.constrain(0, 480, totalMines);
+
+        do Output.moveCursor(12, 16);
+        do Output.printString("CLICK (SPACE) TO PLACE ");
+        do Output.printInt(totalMines);
+        do Output.printString(" MINES!");
+
+        let input = Keyboard.keyPressed();
+        let counter = 0;
+        while (~(input = 32)) {
+            let counter = counter + 1;
+            let input = Keyboard.keyPressed();
+        }
+        if (counter < 1) {let counter = 0 - counter;}
+        let a = counter;
+        let b = counter / 8364 * counter - 1289;
+        let c = Math.sqrt(counter);
+        do Random.setSeeds(a, b, c);
+
+        let grid = Grid.new(rows, cols, totalMines);
+        do grid.show();
+
+        while (gameStillGoing) {
+            do Main.gameLoop();
+            let subtimer = subtimer + 1;
+            if (subtimer > 5) {
+                let subtimer = 0;
+                let timer = timer + 1;
+                do Main.checkWin();
+            }
+            do Output.moveCursor(0, 57);
+            do Output.printInt(timer / 60);
+            do Output.printString(":");
+            if ((timer) - (timer / 60 * 60) < 10) {
+                do Output.printString("0");
+            }
+            do Output.printInt((timer) - (timer / 60 * 60));
+        }
+
+        if (win) {
+            do Output.moveCursor(0, 25);
+            do Output.printString("**YOU WON!**");
+            return;
+        }
+
+        do Output.moveCursor(0, 25);
+        do Output.printString("GAME OVER!!!");
+        let b = 0;
+        while (b < rows) {
+            let c = 0;
+            while (c < cols) {
+                let element = grid.get(b, c);
+                do element.setRevealed(true);
+                do element.show();
+                let c = c + 1;
+            }
+            let b = b + 1;
+        }
+
+        do grid.dispose();
+
+        return;
+    }
+
+    function void gameLoop() {
+        var int key;
+        var Cell element;
+        let key = Keyboard.keyPressed();
+        if (key = 0) {
+            do Sys.wait(160);
+            return;
+        }
+        if (key = 130)  { // left arrow
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(false);
+            do element.show();
+            let curX = curX - 1;
+            let curX = Main.constrain(0, cols - 1, curX);
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(true);
+            do element.show();
+        }
+        if (key = 131)  { // up arrow
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(false);
+            do element.show();
+            let curY = curY - 1;
+            let curY = Main.constrain(0, rows - 1, curY);
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(true);
+            do element.show();
+        }
+        if (key = 132)  { // right arrow
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(false);
+            do element.show();
+            let curX = curX + 1;
+            let curX = Main.constrain(0, cols - 1, curX);
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(true);
+            do element.show();
+        }
+        if (key = 133)  { // down arrow
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(false);
+            do element.show();
+            let curY = curY + 1;
+            let curY = Main.constrain(0, rows - 1, curY);
+            let element = grid.get(curY, curX);
+            do element.setHighlighted(true);
+            do element.show();
+        }
+        if (key = 128) { // enter
+            let element = grid.get(curY, curX);
+            if (~(element.getRevealed())) {
+                do element.setRevealed(true);
+                if (element.getMine()) {
+                    let gameStillGoing = false;
+                    do element.setHighlighted(false);
+                } else { if (element.getNeighborMines() = 0) {
+                    do grid.reveal(curY, curX);
+                }}
+                do element.show();
+            }
+        }
+        do Sys.wait(160);
+        return;
+    }
+
+    function void checkWin() {
+        var int i,j;
+        var Cell element;
+        while (i < rows) {
+            let j = 0;
+            while (j < cols) {
+                let element = grid.get(i, j);
+                if (~element.getRevealed()) {
+                    if (~element.getMine()) {
+                        return;
+                    }
+                }
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        let win = true;
+        let gameStillGoing = false;
+        return;
+    }
+
+    function int constrain(int intervalStart, int intervalEnd, int x) {
+        if (x < intervalStart) {
+            return intervalStart;
+        }
+        if (x > intervalEnd) {
+            return intervalEnd;
+        }
+        return x;
+    }
+
+    function boolean withinBounds(int lower, int upper, int x) {
+        if (x < lower) {
+            return false;
+        }
+        if (x > upper) {
+            return false;
+        }
+        return true;
+    }
+}

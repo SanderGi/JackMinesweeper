@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<button onclick="func()">Generate number</button>
+<p id="para">hello</p>
+
+<script>
+	var s1 = 12345; // 1000 * Math.random();
+    var s2 = 67890; // 1000 * Math.random();
+    var s3 = 98765; // 1000 * Math.random();
+
+	var text = "";
+    var interval = {start:0, end:10};
+    var prev = [];
+
+    var total = 0;
+    for (let i = 0; i < 100000; i++) {
+        total += random();
+    }
+    console.log(total / 100000);
+    
+	function func() {
+    	number = random();
+        prev.push(number);
+        text += number.toString() + "<br>";
+        document.getElementById("para").innerHTML = text;
+        let avrg = 0;
+        for (let num of prev) {
+            avrg += num;
+        }
+        avrg /= prev.length;
+        console.log(avrg);
+    }
+    
+    function random() {
+    	var Z, k;
+		k = Math.floor(s1 / 206);
+        s1 = 157 * (s1 - (k * 206)) - (k * 21);
+        if (s1 < 0) {s1 += 32363};
+        
+        k = Math.floor(s2 / 217);
+        s2 = 146 * (s2 - (k * 217)) - (k * 45);
+        if (s2 < 0) {s2 += 31727};
+        
+        k = Math.floor(s3 / 222);
+        s3 = 142 * (s3 - (k * 222)) - (k * 133);
+        if (s3 < 0) {s3 += 31657};
+        
+        Z = s1 - s2;
+        if (Z > 706) {Z -= 32362};
+        Z += s3;
+        if (Z < 1) {Z += 32362};
+        
+        //return Z * 3.0899 / 100000;
+        //return Math.floor(Z / 3236);
+        return Math.floor(Z / 2942);
+    }
+</script>
+
+</body>
+</html>

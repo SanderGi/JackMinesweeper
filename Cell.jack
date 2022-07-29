@@ -1,0 +1,193 @@
+class Cell {
+    field boolean mine, revealed, highlighted, visited;
+    field int x, y, w, neighborMines;
+
+    constructor Cell new(int Ax, int Ay) {
+        let x = Ax;
+        let y = Ay;
+        let w = 16;
+        let revealed = false;
+        let mine = false;
+        let neighborMines = 0;
+        let highlighted = false;
+        let visited = false;
+        return this;
+    }
+
+    method void show() {
+        do Screen.setColor(false);
+        do Screen.drawRectangle(x, y, x + w - 1, y + w - 1);
+
+        do Screen.setColor(true);
+        if (highlighted) {
+            do Screen.drawRectangle(x, y, x + w - 1, y + w - 1);
+        } else {
+            if (revealed) {
+                if (mine) {
+                    do Screen.drawCircle(x + (w/2), y + (w/2), w/4);
+                } else {
+                    do drawNumber();
+                    // do Screen.drawLine(x, y, x + w - 1, y + w - 1);
+                }
+            }
+            do Screen.drawLine(x, y, x, y + w - 1);
+            do Screen.drawLine(x, y, x + w - 1, y);
+        }
+        return;
+    }
+
+    method void drawNumber() {
+        var int memAddress;
+        let memAddress = 16384 + (y * 32) + (x / 16);
+        if (neighborMines = 8) {
+            do Memory.poke(memAddress+64, 2016);
+            do Memory.poke(memAddress+96, 2016);
+            do Memory.poke(memAddress+128, 6168);
+            do Memory.poke(memAddress+160, 6168);
+            do Memory.poke(memAddress+192, 6168);
+            do Memory.poke(memAddress+224, 2016);
+            do Memory.poke(memAddress+256, 2016);
+            do Memory.poke(memAddress+288, 6168);
+            do Memory.poke(memAddress+320, 6168);
+            do Memory.poke(memAddress+352, 6168);
+            do Memory.poke(memAddress+384, 2016);
+            do Memory.poke(memAddress+416, 2016);
+        } else { if (neighborMines = 7) {
+            do Memory.poke(memAddress+64, 2032);
+            do Memory.poke(memAddress+96, 4080);
+            do Memory.poke(memAddress+128, 3072);
+            do Memory.poke(memAddress+160, 3072);
+            do Memory.poke(memAddress+192, 3072);
+            do Memory.poke(memAddress+224, 8064);
+            do Memory.poke(memAddress+256, 7936);
+            do Memory.poke(memAddress+288, 3072);
+            do Memory.poke(memAddress+320, 3072);
+            do Memory.poke(memAddress+352, 3072);
+            do Memory.poke(memAddress+384, 3072);
+        } else { if (neighborMines = 6) {
+            do Memory.poke(memAddress+64, 4064);
+            do Memory.poke(memAddress+96, 8176);
+            do Memory.poke(memAddress+128, 6200);
+            do Memory.poke(memAddress+160, 24);
+            do Memory.poke(memAddress+192, 24);
+            do Memory.poke(memAddress+224, 2040);
+            do Memory.poke(memAddress+256, 4080);
+            do Memory.poke(memAddress+288, 6168);
+            do Memory.poke(memAddress+320, 6168);
+            do Memory.poke(memAddress+352, 6168);
+            do Memory.poke(memAddress+384, 4080);
+            do Memory.poke(memAddress+416, 2016);
+        } else { if (neighborMines = 5) {
+            do Memory.poke(memAddress+64, 4080);
+            do Memory.poke(memAddress+96, 4088);
+            do Memory.poke(memAddress+128, 3096);
+            do Memory.poke(memAddress+160, 24);
+            do Memory.poke(memAddress+192, 24);
+            do Memory.poke(memAddress+224, 2040);
+            do Memory.poke(memAddress+256, 4080);
+            do Memory.poke(memAddress+288, 7168);
+            do Memory.poke(memAddress+320, 6144);
+            do Memory.poke(memAddress+352, 7192);
+            do Memory.poke(memAddress+384, 4088);
+            do Memory.poke(memAddress+416, 2032);
+        } else { if (neighborMines = 4) {
+            do Memory.poke(memAddress+64, 16128);
+            do Memory.poke(memAddress+96, 8064);
+            do Memory.poke(memAddress+128, 3264);
+            do Memory.poke(memAddress+160, 3168);
+            do Memory.poke(memAddress+192, 3120);
+            do Memory.poke(memAddress+224, 3096);
+            do Memory.poke(memAddress+256, 4092);
+            do Memory.poke(memAddress+288, 4080);
+            do Memory.poke(memAddress+320, 3072);
+            do Memory.poke(memAddress+352, 3072);
+            do Memory.poke(memAddress+384, 3072);
+            do Memory.poke(memAddress+416, 7680);
+        } else { if (neighborMines = 3) {
+            do Memory.poke(memAddress+64, 2032);
+            do Memory.poke(memAddress+96, 4088);
+            do Memory.poke(memAddress+128, 3096);
+            do Memory.poke(memAddress+160, 3072);
+            do Memory.poke(memAddress+192, 3136);
+            do Memory.poke(memAddress+224, 1984);
+            do Memory.poke(memAddress+256, 1984);
+            do Memory.poke(memAddress+288, 3136);
+            do Memory.poke(memAddress+320, 3072);
+            do Memory.poke(memAddress+352, 3096);
+            do Memory.poke(memAddress+384, 4088);
+            do Memory.poke(memAddress+416, 2032);
+        } else { if (neighborMines = 2) {
+            do Memory.poke(memAddress+64, 2032);
+            do Memory.poke(memAddress+96, 4088);
+            do Memory.poke(memAddress+128, 3096);
+            do Memory.poke(memAddress+160, 3072);
+            do Memory.poke(memAddress+192, 3584);
+            do Memory.poke(memAddress+224, 1792);
+            do Memory.poke(memAddress+256, 960);
+            do Memory.poke(memAddress+288, 240);
+            do Memory.poke(memAddress+320, 120);
+            do Memory.poke(memAddress+352, 28);
+            do Memory.poke(memAddress+384, 4092);
+            do Memory.poke(memAddress+416, 8184);
+        } else { if (neighborMines = 1) {
+            do Memory.poke(memAddress+64, 1792);
+            do Memory.poke(memAddress+96, 1920);
+            do Memory.poke(memAddress+128, 1728);
+            do Memory.poke(memAddress+160, 1536);
+            do Memory.poke(memAddress+192, 1536);
+            do Memory.poke(memAddress+224, 1536);
+            do Memory.poke(memAddress+256, 1536);
+            do Memory.poke(memAddress+288, 1536);
+            do Memory.poke(memAddress+320, 1536);
+            do Memory.poke(memAddress+352, 1536);
+            do Memory.poke(memAddress+384, 3840);
+            do Memory.poke(memAddress+416, 8064);
+        } else {
+            do Screen.drawLine(x, y, x + w - 1, y + w - 1);
+        }
+        }}}}}}}
+        return;
+    }
+
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    // accessors
+    method boolean getMine() {
+        return mine;
+    }
+    method boolean getRevealed() {
+        return revealed;
+    }
+    method boolean gethighlighted() {
+        return highlighted;
+    }
+    method void setMine(boolean Amine) {
+        let mine = Amine;
+        return;
+    }
+    method void setRevealed(boolean Arevealed) {
+        let revealed = Arevealed;
+        return;
+    }
+    method void setHighlighted(boolean Ahighlighted) {
+        let highlighted = Ahighlighted;
+        return;
+    }
+    method void setNeighborMines(int AneighborMines) {
+        let neighborMines = AneighborMines;
+        return;
+    }
+    method int getNeighborMines() {
+        return neighborMines;
+    }
+    method void setVisited(boolean Avisited) {
+        let visited = Avisited;
+        return;
+    }
+    method boolean getVisited() {
+        return visited;
+    }
+}

@@ -1,0 +1,125 @@
+function Random.random 2
+push static 0
+push constant 206
+call Math.divide 2
+pop local 1
+push constant 157
+push static 0
+push local 1
+push constant 206
+call Math.multiply 2
+sub
+call Math.multiply 2
+push local 1
+push constant 21
+call Math.multiply 2
+sub
+pop static 0
+push static 0
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push static 0
+push constant 32363
+add
+pop static 0
+label IF_FALSE0
+push static 1
+push constant 217
+call Math.divide 2
+pop local 1
+push constant 146
+push static 1
+push local 1
+push constant 217
+call Math.multiply 2
+sub
+call Math.multiply 2
+push local 1
+push constant 45
+call Math.multiply 2
+sub
+pop static 1
+push static 1
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push static 1
+push constant 31727
+add
+pop static 1
+label IF_FALSE1
+push static 2
+push constant 222
+call Math.divide 2
+pop local 1
+push constant 142
+push static 2
+push local 1
+push constant 222
+call Math.multiply 2
+sub
+call Math.multiply 2
+push local 1
+push constant 133
+call Math.multiply 2
+sub
+pop static 2
+push static 2
+push constant 0
+lt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push static 2
+push constant 31657
+add
+pop static 2
+label IF_FALSE2
+push static 0
+push static 1
+sub
+pop local 0
+push local 0
+push constant 706
+gt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push local 0
+push constant 32362
+sub
+pop local 0
+label IF_FALSE3
+push local 0
+push static 2
+add
+pop local 0
+push local 0
+push constant 1
+lt
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push local 0
+push constant 32362
+add
+pop local 0
+label IF_FALSE4
+push local 0
+push argument 0
+call Math.divide 2
+return
+function Random.setSeeds 0
+push argument 0
+pop static 0
+push argument 1
+pop static 1
+push argument 2
+pop static 2
+push constant 0
+return

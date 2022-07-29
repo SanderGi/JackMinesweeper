@@ -1,0 +1,198 @@
+class Grid {
+    field int ylength, xlength;
+    field Array data;
+    // field Array zeroX, zeroY, visited;
+    // field int zeroMapLength;
+
+    constructor Grid new(int Aylength, int Axlength, int mineCount) {
+        // var int i;
+        // let zeroX = Array.new(1);
+        // let zeroY = Array.new(1);
+        let ylength = Aylength;
+        let xlength = Axlength;
+        do initData();
+        do initMines(mineCount);
+        do initNeighborMines();
+        // while (i < zeroMapLength) {
+        //     let visited[i] = false;
+        //     let i = i + 1;
+        // }
+        return this;
+    }
+
+    method void initData() {
+        var int i, j;
+        var Array row;
+        let data = Array.new(ylength);
+        let i = 0;
+        while (i < ylength) {
+            let data[i] = Array.new(xlength);
+            let row = data[i];
+            let j = 0;
+            while (j < xlength) {
+                let row[j] = Cell.new(j * 16, i * 16 + 16);
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method void initMines(int goal) {
+        var int count;
+        var int a,b;
+        var Cell element;
+        while (count < goal) {
+            let a = Random.random(2023);
+            let a = Main.constrain(0, ylength - 1, a);
+            let b = Random.random(1011);
+            let b = Main.constrain(0, xlength - 1, b);
+            let element = get(a, b);
+            if (~(element.getMine())) {
+                do element.setMine(true);
+                let count = count + 1;
+            }
+        }
+        return;
+    }
+
+    method void initNeighborMines() {
+        var int i, j;
+        var Cell element;
+        var int neighbors;
+        while (i < ylength) {
+            let j = 0;
+            while (j < xlength) {
+                let element = get(i, j);
+                let neighbors = calcNeighbors(i, j);
+                do element.setNeighborMines(neighbors);
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method int calcNeighbors(int posY, int posX) {
+        var int count;
+        var Cell element;
+        var int dx;
+        var int dy;
+        var int x;
+        var int y;
+        let dy = -1;
+        while (dy < 2) {
+            let y = posY + dy;
+            if (Main.withinBounds(0, ylength - 1, y)) {
+                let dx = - 1;
+                while (dx < 2) {
+                    let x = posX + dx;
+                    if (Main.withinBounds(0, xlength - 1, x)) {
+                        let element = get(y, x);
+                        if (element.getMine()) {let count = count + 1;}
+                    }
+                    let dx = dx + 1;
+                }
+            }
+            let dy = dy + 1;
+        }
+        return count;
+    }
+
+    method void reveal(int posY, int posX) {
+        var Cell element;
+        var int i, j;
+        var boolean hasChanged;
+
+        let hasChanged = true;
+        while (hasChanged) {
+            let hasChanged = false;
+            let i = 0;
+            while (i < ylength) {
+                let j = 0;
+                while (j < xlength) {
+                    let element = get(i, j);
+                    if (element.getVisited() = false) {
+                        if (element.getRevealed()) {
+                            if (element.getNeighborMines() = 0) {
+                                let hasChanged = true;
+                                do element.setVisited(true);
+                                do element.show();
+                                let element = get(Main.constrain(0,ylength-1,i-1), Main.constrain(0,xlength-1,j-1));
+                                do element.setRevealed(true);
+                                do element.show();
+                                let element = get(i, Main.constrain(0,xlength-1,j-1));
+                                do element.setRevealed(true);
+                                do element.show();
+                                let element = get(Main.constrain(0,ylength-1,i-1), j);
+                                do element.setRevealed(true);
+                                do element.show();
+                                let element = get(Main.constrain(0,ylength-1,i-1), Main.constrain(0,xlength-1,j+1));
+                                do element.setRevealed(true);
+                                do element.show();
+                                let element = get(Main.constrain(0,ylength-1,i+1), Main.constrain(0,xlength-1,j-1));
+                                do element.setRevealed(true);
+                                do element.show();
+                                let element = get(Main.constrain(0,ylength-1,i+1), j);
+                                do element.setRevealed(true);
+                                do element.show();
+                                let element = get(i, Main.constrain(0,xlength-1,j+1));
+                                do element.setRevealed(true);
+                                do element.show();
+                                let element = get(Main.constrain(0,ylength-1,i+1), Main.constrain(0,xlength-1,j+1));
+                                do element.setRevealed(true);
+                                do element.show();
+                            } else {do element.setVisited(true);}
+                        }
+                    }
+                    let j = j + 1;
+                }
+                let i = i + 1;
+            }
+        }
+        return;
+    }
+
+    method void show() {
+        var int i, j;
+        var Cell element;
+        let i = 0;
+        while (i < ylength) {
+            let j = 0;
+            while (j < xlength) {
+                let element = get(i, j);
+                do element.show();
+                let j = j + 1;
+            }
+            let i = i + 1;
+        }
+        return;
+    }
+
+    method Cell get(int y, int x) {
+        var Array row;
+        var Cell element;
+        let row = data[y];
+        let element = row[x];
+        return element;
+    }
+
+    method void dispose() {
+        var int i, j;
+        var Cell element;
+        let i = 0;
+        while (i < ylength) {
+            let j = 0;
+            while (j < xlength) {
+                let element = get(i, j);
+                do element.dispose();
+                let j = j + 1;
+            }
+            do Memory.deAlloc(data[i]);
+            let i = i + 1;
+        }
+        do Memory.deAlloc(data);
+        do Memory.deAlloc(this);
+        return;
+    }
+}

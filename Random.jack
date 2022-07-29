@@ -1,0 +1,39 @@
+/* Implementation of a 16 bit algorithm for generating psuedo random numbers by combin-
+ing 3 Multiplicative Linear Congruential Generators as proposed in the following paper:
+http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.72.88&rep=rep1&type=pdf */
+
+class Random {
+    static int s1, s2, s3; // Seeds should be initialized before function is called
+
+    function int random(int scale) { // let n = upperbound_of_function => scale = 32363 / n
+    	var int Z, k;
+
+		let k = s1 / 206; // note: takes advantage of integer division
+        let s1 = 157 * (s1 - (k * 206)) - (k * 21);
+        if (s1 < 0) {let s1 = s1 + 32363;}
+        
+        let k = s2 / 217;
+        let s2 = 146 * (s2 - (k * 217)) - (k * 45);
+        if (s2 < 0) {let s2 = s2 + 31727;}
+        
+        let k = s3 / 222;
+        let s3 = 142 * (s3 - (k * 222)) - (k * 133);
+        if (s3 < 0) {let s3 = s3 + 31657;}
+        
+        let Z = s1 - s2;
+        if (Z > 706) {let Z = Z - 32362;}
+        let Z = Z + s3;
+        if (Z < 1) {let Z = Z + 32362;}
+        
+        // return Z * 3.0899 / 100000;
+        // return Z / 32363;
+        return Z / scale;
+    }
+
+    function void setSeeds(int a, int b, int c) {
+        let s1 = a;
+        let s2 = b;
+        let s3 = c;
+        return;
+    }
+}
